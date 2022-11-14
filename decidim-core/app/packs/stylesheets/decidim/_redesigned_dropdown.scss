@@ -39,9 +39,22 @@
 
   & > *{
     @apply relative z-10;
+
   }
 
-  &.bottom{
+  &__item{
+    @apply p-2 gap-x-2 flex items-center text-sm text-secondary;
+
+    > svg{
+      @apply w-4 h-4 flex-none text-gray fill-current ;
+    }
+
+    &:hover{
+      @apply underline [&>svg]:text-secondary;
+    }
+  }
+
+  &__bottom{
     @apply top-full right-0 mt-3 before:content-[''] before:absolute before:right-[20%] before:-top-2 before:w-6 before:h-6 before:rotate-45 before:bg-white before:rounded before:border-2 before:border-gray-3 after:content-[''] after:absolute after:left-0 after:top-0 after:w-full after:h-full after:bg-white;
   }
 }

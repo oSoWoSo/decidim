@@ -1,24 +1,26 @@
 <%= form_for(form_object, url: decidim_comments.comments_path(order: order), method: :post, remote: true, html: { id: form_id }) do |form| %>
   <%= form.hidden_field :commentable_gid, id: nil %>
-  <%= form.hidden_field :alignment, id: nil, class: "alignment-input" %>
   <%= comment_as_for(form) %>
-  <div class="field">
-    <label class="show-for-sr" for="<%= add_comment_id %>">
+  <div class="form__wrapper gap-2">
+    <label for="<%= add_comment_id %>">
       <%= t("decidim.components.add_comment_form.form.body.label") %>
     </label>
-    <div class="hashtags__container">
-      <%= form.text_area(
-        :body,
-        id: add_comment_id,
-        rows: 4,
-        maxlength: comments_max_length,
-        required: true,
-        placeholder: t("decidim.components.add_comment_form.form.body.placeholder"),
-        label: false,
-        data: { remaining_characters: "##{add_comment_id}-remaining-characters", input_emoji: true }
-      ) %>
+    <%= form.text_area(
+      :body,
+      id: add_comment_id,
+      class: "w-full rounded border",
+      maxlength: comments_max_length,
+      required: true,
+      placeholder: t("decidim.components.add_comment_form.form.body.placeholder"),
+      label: false,
+      data: { remaining_characters: "##{add_comment_id}-remaining-characters", input_emoji: true }
+    ) %>
+    <span id="<%= add_comment_id %>-remaining-characters" class="remaining-character-count show-erb-comment"></span>
+    <div class="w-full text-right">
+      <button type="submit" class="button button__sm button__secondary" disabled="disabled">
+      <%# REDESIGN_PENDING: if the user is replying to a comment the string should be: publicar respuesta/publicar respota, but if he's replying to the post it should be: publicar comentario/publicar comentari %>
+        <span><%= t("decidim.components.add_comment_form.form.submit") %></span>
+    </button>
     </div>
-    <button type="submit" class="button button--sc" disabled="disabled"><%= t("decidim.components.add_comment_form.form.submit") %></button>
-    <span id="<%= add_comment_id %>-remaining-characters" class="remaining-character-count"></span>
   </div>
 <% end %>

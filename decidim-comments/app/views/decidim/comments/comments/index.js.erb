@@ -4,7 +4,7 @@
   var $comments = $("#" + rootCommentableId);
   var component = $comments.data("comments");
 
-  $(".loading-comments").addClass("hide");
+  $(".loading-comments").addClass("hidden");
 <% @comments.each do |comment| %>
   var commentId = <%= comment.id.to_json %>;
   var commentHtml = '<%== j(render comment).strip %>';
@@ -22,4 +22,6 @@
 
   // Update the comments count
   $(".comments-count", $comments).text(<%== t("decidim.components.comments.title", count: @comments_count).to_json %>);
+  Decidim.Accordions.init();
+  Decidim.Dropdowns.init();
 }());
