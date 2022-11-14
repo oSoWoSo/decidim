@@ -3,6 +3,7 @@
 module Decidim
   # This cell creates the necessary elements for dynamic uploads.
   class UploadModalCell < Decidim::ViewModel
+    include LayoutHelper
     include Cell::ViewModel::Partial
     include ERB::Util
     include Decidim::RedesignHelper
@@ -114,12 +115,6 @@ module Decidim
 
     def with_title
       "with-title" if has_title?
-    end
-
-    def attachment_label
-      return I18n.t("current_image", scope: "decidim.forms") if attachments.count.positive? && file_attachment_path(attachments.first).present?
-
-      I18n.t("default_image", scope: "decidim.forms")
     end
 
     def help_messages
