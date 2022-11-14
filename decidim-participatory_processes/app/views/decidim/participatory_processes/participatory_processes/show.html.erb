@@ -14,53 +14,82 @@
   )
 %>
 
-<%= participatory_space_floating_help %>
+<div class="process__container">
 
-<% if current_participatory_space.private_space? %>
-  <%= render partial: "decidim/shared/private_participatory_space",
-             locals: { text: t("private_space", scope: "decidim.participatory_processes.show") } %>
-<% end %>
+  <%= redesigned_participatory_space_floating_help %>
 
-<%= cell("decidim/announcement", current_participatory_space.announcement) %>
+  <% if current_participatory_space.private_space? %>
+    <%= cell("decidim/announcement", t("private_space", scope: "decidim.participatory_processes.show"), callout_class: "alert") %>
+  <% end %>
 
-<div class="row column">
-  <div class="row">
-    <div class="columns medium-7 mediumlarge-8">
-      <div class="section">
-        <h2 class="show-for-sr"><%= t(".title") %></h2>
-        <% if participatory_process_group.present? %>
-          <%= render partial: "participatory_process_group" %>
+  <%= cell("decidim/announcement", current_participatory_space.announcement) %>
+
+  <section class="content-block">
+    <h2 class="h2 decorator"><%= t(".title") %></h2>
+
+    <div class="content-block__description">
+      <%= decidim_sanitize_editor translated_attribute(current_participatory_space.short_description) %>
+    </div>
+
+    <%= link_to "#", class: "button button__lg button__text-secondary" do %>
+      <span><%= t("more_info", scope: "layouts.decidim.participatory_processes.participatory_process") %></span>
+      <%= icon "arrow-right-line" %>
+    <% end %>
+    <%#= REDESIGN_PENDING: Move this where the link points to (new view) %>
+    <%#= decidim_sanitize_editor translated_attribute(current_participatory_space.description) %>
+
+    <%= render partial: "metadata" %>
+
+  </section>
+
+  <section class="content-block">
+    <%= render_hook(:participatory_space_highlighted_elements) %>
+  </section>
+
+  <% if related_processes.any? %>
+    <section class="content-block">
+      <h2 class="h2 decorator"><%= t "related_processes", scope: "decidim.participatory_processes.show" %></h2>
+      <div class="collapsible-list row small-up-1 medium-up-2 card-grid">
+        <% related_processes.each do |related_process| %>
+          <%= card_for(related_process) %>
         <% end %>
         <div class="lead">
           <%= decidim_sanitize_editor translated_attribute(current_participatory_space.short_description) %>
         </div>
         <%= decidim_sanitize_editor_admin translated_attribute(current_participatory_space.description) %>
       </div>
-      <%= attachments_for current_participatory_space %>
-      <%= render_hook(:participatory_space_highlighted_elements) %>
+    </section>
+  <% end %>
 
-      <% if related_processes.any? %>
-        <div class="section row collapse related_processes">
-          <h4 class="section-heading"><%= t "related_processes", scope: "decidim.participatory_processes.show" %></h4>
-          <div class="collapsible-list row small-up-1 medium-up-2 card-grid">
-            <% related_processes.each do |related_process| %>
-              <%= card_for(related_process) %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+  <% if linked_assemblies.any? %>
+    <section class="content-block">
+      <h2 class="h2 decorator"><%= t("participatory_process.show.related_assemblies", scope: "decidim") %></h2>
+      <div class="row small-up-1 medium-up-2 card-grid">
+        <% linked_assemblies.each do |linked_assembly| %>
+          <%= card_for(linked_assembly) %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
 
-      <% if linked_assemblies.any? %>
-        <div class="section">
-          <h4 class="section-heading"><%= t("participatory_process.show.related_assemblies", scope: "decidim") %></h4>
-          <div class="row small-up-1 medium-up-2 card-grid">
-            <% linked_assemblies.each do |linked_assembly| %>
-              <%= card_for(linked_assembly) %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+  <% if current_participatory_space.show_statistics? %>
+    <%= cell "decidim/statistics", stats.collection %>
+  <% end %>
 
+  <% if current_participatory_space.show_metrics? %>
+    <%= render partial: "metrics" %>
+  <% end %>
+
+  <section class="content-block">
+    <%= attachments_for current_participatory_space %>
+  </section>
+
+</div>
+
+<% if false %>
+<div class="row column">
+  <div class="row">
+    <div class="columns medium-7 mediumlarge-8">
     </div>
     <div class="section columns medium-5 mediumlarge-4 large-3">
       <div class="card extra">
@@ -142,12 +171,5 @@
       <%= embed_modal_for participatory_process_widget_url(current_participatory_space, format: :js) %>
     </div>
   </div>
-
-  <% if current_participatory_space.show_statistics? %>
-     <%= cell "decidim/statistics", stats.collection %>
-  <% end %>
-
-  <% if current_participatory_space.show_metrics? %>
-    <%= render partial: "metrics" %>
-  <% end %>
 </div>
+<% end %>

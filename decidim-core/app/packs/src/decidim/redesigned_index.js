@@ -51,7 +51,6 @@ import "./vizzs"
 import "./responsive_horizontal_tabs"
 import "./security/selfxss_warning"
 import "./session_timeouter"
-import "./floating_help"
 import "./confirm"
 import "./results_listing"
 // import "./represent_user_group" -- deprecated
@@ -80,6 +79,7 @@ import markAsReadNotifications from "./notifications"
 import RemoteModal from "./redesigned_ajax_modals"
 import selectActiveIdentity from "./redesigned_identity_selector_dialog"
 import setHeadingTag from "./redesigned_heading_tag"
+import addFloatingHelp from "./redesigned_floating_help"
 
 // bad practice: window namespace should avoid be populated as much as possible
 // rails-translations could be referrenced through a single Decidim.I18n object
@@ -214,6 +214,8 @@ const initializer = (element = document) => {
   // Initialize available remote modals (ajax-fetched contents)
   element.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
 
+  // Initialize the floating help blocks for the participatory processes
+  element.querySelectorAll("[data-floating-help]").forEach((elem) => addFloatingHelp(elem))
 }
 
 if ("Turbo" in window) {

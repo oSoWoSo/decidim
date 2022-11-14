@@ -6,8 +6,9 @@ module Decidim
     # public layout.
     class ParticipatoryProcessesController < Decidim::ParticipatoryProcesses::ApplicationController
       include ParticipatorySpaceContext
-      participatory_space_layout only: [:show, :all_metrics]
+      redesign_participatory_space_layout only: [:show, :all_metrics]
       include FilterResource
+      include Paginable
 
       helper_method :collection,
                     :promoted_collection,
@@ -82,7 +83,7 @@ module Decidim
       end
 
       def collection
-        @collection ||= participatory_processes + participatory_process_groups
+        @collection ||= paginate(Kaminari.paginate_array(participatory_processes + participatory_process_groups))
       end
 
       def filtered_processes

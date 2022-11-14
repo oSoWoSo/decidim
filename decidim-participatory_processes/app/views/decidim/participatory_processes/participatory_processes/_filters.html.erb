@@ -1,0 +1,59 @@
+<%# REDESIGN_PENDING: Same logic as Meetings %>
+
+<%= redesigned_filter_form_for filter, url_for, class: "self-stretch", data: { filters: "", component: "accordion" } do |form| %>
+
+  <% if false %>
+  <%# REDESIGN_PENDING: Missing field to search with %>
+  <div class="filter-search filter-container">
+    <%= form.search_field "",
+      label: false,
+      placeholder: t("decidim.meetings.meetings.filters.search"),
+      title: t("decidim.meetings.meetings.filters.search"),
+      "aria-label": t("decidim.meetings.meetings.filters.search"),
+      data: { disable_dynamic_change: true }
+    %>
+    <button type="submit" aria-controls="meetings" aria_label="<%= t("decidim.meetings.meetings.filters.search") %>">
+      <%= icon "search-line"  %>
+    </button>
+  </div>
+  <% end %>
+
+  <%
+    filters = [];
+
+    filter_date_values = [
+      ["all", filter_text_for("all", t("decidim.meetings.meetings.filters.date_values.all"))],
+      ["upcoming", filter_text_for("upcoming", t("decidim.meetings.meetings.filters.date_values.upcoming"))],
+      ["past", filter_text_for("upcoming", t("decidim.meetings.meetings.filters.date_values.past"))]
+    ]
+
+    filters << ["status", "radio", :with_date, filter_date_values, "decidim.shared.participatory_space_filters.filters"]
+    filters << ["scopes", "check_box", :with_scope, filter_date_values, "decidim.shared.participatory_space_filters.filters"]
+    filters << ["areas", "check_box", :with_area, filter_date_values, "decidim.shared.participatory_space_filters.filters"]
+    filters << ["types", "radio", :with_type, filter_date_values, "decidim.shared.participatory_space_filters.filters"]
+
+  %>
+
+  <% filters.each do |f| %>
+    <div class="filter-container">
+      <button data-controls="panel-dropdown-menu-<%= f[0] %>" data-open="true">
+        <%= icon "arrow-down-s-line" %>
+        <%= icon "arrow-up-s-line" %>
+        <span><%= t(f[0], scope: f[4]) %></span>
+      </button>
+      <div id="panel-dropdown-menu-<%= f[0] %>">
+        <%= form.send(
+            f[1] == "radio" ? "collection_radio_buttons" : "collection_check_boxes",
+            f[2],
+            f[3],
+            :first,
+            :last
+        ) do |builder|
+              builder.label {
+                builder.send(f[1] == "radio" ? "radio_button" : "check_box", class: "reset-defaults" , hidden: true ) + content_tag(:div, builder.text, class: "filter" ) }
+          end %>
+      </div>
+    </div>
+  <% end %>
+
+<% end %>
