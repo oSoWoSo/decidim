@@ -57,7 +57,6 @@ import "./results_listing"
 import "./represent_user_group"
 import "./impersonation"
 // import "./start_conversation_dialog" -- deprecated
-import "./identity_selector_dialog"
 import "./gallery"
 import "./direct_uploads/upload_field"
 
@@ -79,6 +78,7 @@ import FocusGuard from "./focus_guard"
 import backToListLink from "./back_to_list"
 import markAsReadNotifications from "./notifications"
 import RemoteModal from "./redesigned_ajax_modals"
+import selectActiveIdentity from "./redesigned_identity_selector_dialog"
 
 // bad practice: window namespace should avoid be populated as much as possible
 // rails-translations could be referrenced through a single Decidim.I18n object
@@ -100,14 +100,15 @@ Rails.start()
  * Initializer event for those script who require to be triggered
  * when the page is loaded
  *
+ * @param {DOMNode} element target node
  * @returns {void}
  */
-const initializer = () => {
+const initializer = (element = document) => {
   window.theDataPicker = new DataPicker($(".data-picker"));
-  window.focusGuard = new FocusGuard(document.querySelector("body"));
+  window.focusGuard = new FocusGuard(element.querySelector("body"));
 
-  $(document).foundation();
-  $(document).on("open.zf.reveal", (ev) => {
+  $(element).foundation();
+  $(element).on("open.zf.reveal", (ev) => {
     dialogMode($(ev.target));
   });
 
@@ -137,7 +138,7 @@ const initializer = () => {
     createQuillEditor(container);
   });
 
-  document.querySelectorAll("a[target=\"_blank\"]:not([data-external-link=\"false\"])").forEach((elem) => new ExternalLink(elem))
+  element.querySelectorAll("a[target=\"_blank\"]:not([data-external-link=\"false\"])").forEach((elem) => new ExternalLink(elem))
 
   // initialize character counter
   $("input[type='text'], textarea, .editor>input[type='hidden']").each((_i, elem) => {
@@ -159,41 +160,51 @@ const initializer = () => {
 
   updateExternalDomainLinks($("body"))
 
-  addInputEmoji()
+  addInputEmoji(element)
 
-  backToListLink(document.querySelectorAll(".js-back-to-list"));
+  backToListLink(element.querySelectorAll(".js-back-to-list"));
 
-  markAsReadNotifications()
+  markAsReadNotifications(element)
 
-  scrollToLastChild()
+  scrollToLastChild(element)
 
+  // https://github.com/jonathanlevaillant/a11y-accordion-component
   Accordions.init();
+  // https://github.com/jonathanlevaillant/a11y-dropdown-component
   Dropdowns.init();
-  document.querySelectorAll("[data-dialog]").forEach(
-    ({ dataset: { dialog } }) =>
-      new Dialogs(`[data-dialog="${dialog}"]`, {
-        openingSelector: `[data-dialog-open="${dialog}"]`,
-        closingSelector: `[data-dialog-close="${dialog}"]`,
-        labelledby: `dialog-title-${dialog}`,
+  // https://github.com/jonathanlevaillant/a11y-dialog-component
+  element.querySelectorAll("[data-dialog]").forEach((elem) => {
+    const {
+      dataset: { dialog }
+    } = elem;
+    return new Dialogs(`[data-dialog="${dialog}"]`, {
+      openingSelector: `[data-dialog-open="${dialog}"]`,
+      closingSelector: `[data-dialog-close="${dialog}"]`,
+      // optional parameters (whenever exists the id, it'll add the tagging)
+      ...(Boolean(elem.querySelector(`#dialog-title-${dialog}`)) && {
+        labelledby: `dialog-title-${dialog}`
+      }),
+      ...(Boolean(elem.querySelector(`#dialog-desc-${dialog}`)) && {
         describedby: `dialog-desc-${dialog}`
       })
-  );
+    });
+  });
 
-  document.querySelectorAll("[data-drawer]").forEach(
-    ({ dataset: { drawer } }) =>
-      new Dialogs(`[data-drawer="${drawer}"]`, {
-        openingSelector: `[data-drawer-open="${drawer}"]`,
-        closingSelector: `[data-drawer-close="${drawer}"]`
-      })
-  );
+  // Initialize available remote modals (ajax-fetched contents)
+  element.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
+
+  // Add event listeners to identity modal
+  element.querySelectorAll("[data-user-identity]").forEach((elem) => selectActiveIdentity(elem))
 
   // Initialize available remote modals (ajax-fetched contents)
   document.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
+
 }
 
 if ("Turbo" in window) {
-  document.addEventListener("turbo:frame-render", () => initializer());
   document.addEventListener("turbo:load", () => initializer());
+  document.addEventListener("turbo:frame-render", ({ target }) => initializer(target));
+  document.addEventListener("remote-modal:loaded", ({ detail }) => initializer(detail));
 } else {
   // If no jQuery is used the Tribute feature used in comments to autocomplete
   // mentions stops working
