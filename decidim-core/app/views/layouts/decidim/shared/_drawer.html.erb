@@ -15,6 +15,7 @@
     <% if local_assigns[:next].present? %>
       <div data-drawer-next><%= icon "arrow-left-s-line", class: "w-8 h-8 text-secondary fill-current" %></div>
     <% end %>
+    <%= yield :drawer_header %>
     <div data-drawer-content>
       <div><%= yield %></div>
       <div><%= yield :drawer_aside %></div>
