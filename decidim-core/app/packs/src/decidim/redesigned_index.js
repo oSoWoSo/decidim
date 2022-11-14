@@ -7,15 +7,16 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import "jquery"
 import "quill"
-import Rails from "@rails/ujs"
-import "@hotwired/turbo-rails"
 
 // external deps that require initialization
+import Rails from "@rails/ujs"
 import svg4everybody from "svg4everybody"
 import morphdom from "morphdom"
 import Accordions from "a11y-accordion-component";
 import Dropdowns from "a11y-dropdown-component";
 import Dialogs from "a11y-dialog-component";
+import { StreamActions } from "@hotwired/turbo"
+import { Turbo } from "@hotwired/turbo-rails"
 
 // vendor customizated scripts (bad practice: these ones should be removed eventually)
 import "./vendor/foundation-datepicker"
@@ -79,6 +80,7 @@ import backToListLink from "./back_to_list"
 import markAsReadNotifications from "./notifications"
 import RemoteModal from "./redesigned_ajax_modals"
 import selectActiveIdentity from "./redesigned_identity_selector_dialog"
+import setHeadingTag from "./redesigned_heading_tag"
 
 // bad practice: window namespace should avoid be populated as much as possible
 // rails-translations could be referrenced through a single Decidim.I18n object
@@ -190,6 +192,19 @@ const initializer = (element = document) => {
     });
   });
 
+  element.
+    querySelectorAll("[data-drawer]").
+    forEach(({ dataset: { drawer } }) =>
+      new Dialogs(`[data-drawer="${drawer}"]`, {
+        closingSelector: `[data-drawer-close="${drawer}"]`,
+        onOpen: (node) => setHeadingTag(node),
+        onClose: (node) => {
+          setHeadingTag(node);
+          Turbo.navigator.history.replace({ href: drawer });
+        }
+      }).open()
+    );
+
   // Initialize available remote modals (ajax-fetched contents)
   element.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
 
@@ -197,7 +212,7 @@ const initializer = (element = document) => {
   element.querySelectorAll("[data-user-identity]").forEach((elem) => selectActiveIdentity(elem))
 
   // Initialize available remote modals (ajax-fetched contents)
-  document.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
+  element.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
 
 }
 
@@ -210,4 +225,16 @@ if ("Turbo" in window) {
   // mentions stops working
   // document.addEventListener("DOMContentLoaded", () => {
   $(() => initializer());
+}
+
+// eslint-disable-next-line camelcase
+StreamActions.open_drawer = function() {
+  const frameId = this.getAttribute("frame_id");
+  const drawerItem = document.getElementById(frameId);
+  const filteredPath = drawerItem.dataset.filteredPath;
+
+  if (filteredPath) {
+    drawerItem.querySelector("a[data-drawer-close]").setAttribute("href", filteredPath);
+    drawerItem.querySelector("div[data-drawer]").setAttribute("data-drawer", filteredPath);
+  }
 }
