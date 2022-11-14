@@ -17,6 +17,7 @@ import dialogMode from "src/decidim/dialog_mode"
 import FocusGuard from "src/decidim/focus_guard"
 import backToListLink from "src/decidim/back_to_list"
 import markAsReadNotifications from "src/decidim/notifications"
+import RemoteModal from "src/decidim/ajax_modals"
 
 window.Decidim = window.Decidim || {};
 window.Decidim.config = new Configuration()

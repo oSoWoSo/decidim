@@ -417,6 +417,8 @@ en:
       directory:
         meetings:
           index:
+            go_to_calendar: See the full calendar
+            go_to_list: See the event list
             meetings: Meetings
             space_type: Participatory space
       iframe_access_level:
@@ -652,7 +654,7 @@ en:
     participatory_spaces:
       highlighted_meetings:
         past_meetings: Past meetings
-        see_all: See all meetings (%{count})
+        see_all: See all meetings
         upcoming_meetings: Upcoming meetings
       upcoming_meeting_for_card:
         upcoming_meeting: Upcoming meeting

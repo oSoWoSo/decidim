@@ -3,7 +3,9 @@
 module Decidim
   class VersionCell < Decidim::ViewModel
     include Decidim::TraceabilityHelper
+    include Decidim::LayoutHelper
     include Decidim::SanitizeHelper
+    include Turbo::FramesHelper
 
     def resource_title
       decidim_html_escape(translated_attribute(versioned_resource.title))
@@ -15,6 +17,10 @@ module Decidim
 
     def versioned_resource
       options[:versioned_resource]
+    end
+
+    def path
+      options[:path]
     end
 
     def versions_path

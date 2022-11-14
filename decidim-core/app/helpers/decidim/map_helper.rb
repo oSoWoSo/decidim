@@ -96,12 +96,12 @@ module Decidim
         snippets.add(:foot, snippets.for(:map_scripts))
       end
 
-      map_html_options = { id: "map", class: "google-map" }.merge(html_options)
+      map_html_options = { id: "map" }.merge(html_options)
       bottom_id = "#{map_html_options[:id]}_bottom"
 
-      help = content_tag(:div, class: "map__help") do
-        sr_content = content_tag(:p, t("screen_reader_explanation", scope: "decidim.map.dynamic"), class: "show-for-sr")
-        link = link_to(t("skip_button", scope: "decidim.map.dynamic"), "##{bottom_id}", class: "skip")
+      help = content_tag(:div, class: "sr-only") do
+        sr_content = content_tag(:p, t("screen_reader_explanation", scope: "decidim.map.dynamic"))
+        link = link_to(t("skip_button", scope: "decidim.map.dynamic"), "##{bottom_id}")
 
         sr_content + link
       end

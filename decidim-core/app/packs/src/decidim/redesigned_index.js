@@ -32,7 +32,6 @@ import "./input_tags"
 import "./input_hashtags"
 import "./input_mentions"
 import "./input_multiple_mentions"
-// import "./input_character_counter" --deprecated
 import "./input_autojump"
 import "./history"
 import "./callout"
@@ -46,7 +45,7 @@ import "./form_attachments"
 import "./form_remote"
 // import "./conferences" -- deprecated
 import "./tooltip_keep_on_hover"
-import "./diff_mode_dropdown"
+// import "./diff_mode_dropdown" -- deprecated
 import "./delayed"
 import "./vizzs"
 import "./responsive_horizontal_tabs"
@@ -55,7 +54,7 @@ import "./session_timeouter"
 import "./floating_help"
 import "./confirm"
 import "./results_listing"
-import "./represent_user_group"
+// import "./represent_user_group" -- deprecated
 import "./impersonation"
 // import "./start_conversation_dialog" -- deprecated
 import "./gallery"
@@ -140,6 +139,7 @@ const initializer = (element = document) => {
     createQuillEditor(container);
   });
 
+  // initialize external-link feature only to the matching elements
   element.querySelectorAll("a[target=\"_blank\"]:not([data-external-link=\"false\"])").forEach((elem) => new ExternalLink(elem))
 
   // initialize character counter

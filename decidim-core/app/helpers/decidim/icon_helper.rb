@@ -20,6 +20,17 @@ module Decidim
       "Decidim::ParticipatoryProcess" => "treasure-map-line",
       "Decidim::Category" => "price-tag-3-line",
       "Decidim::Scope" => "scan-line",
+      "Decidim::Conference" => "question-mark", # REDESIGN_PENDING: icon unknown
+      "Decidim::Consultation" => "question-mark", # REDESIGN_PENDING: icon unknown
+      "Decidim::Votings::Voting" => "check-double-fill",
+      "upcoming" => "calendar-2-line",
+      "past" => "calendar-check-line",
+      "in_person" => "community-line",
+      "online" => "webcam-line",
+      "hybrid" => "home-wifi-line",
+      "official" => "star-line",
+      "participants" => "open-arm-line",
+      "user_groups" => "team-line",
       "other" => "question-line"
     }.freeze
 

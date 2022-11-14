@@ -11,6 +11,8 @@ module Decidim
     #
     # Returns a String with the link.
     def action_authorized_link_to(action, *arguments, &block)
+      # REDESIGN_PENDING: use redesign_authorized_to once merged
+      # feature/redesign-action-buttons where this method is defined
       authorized_to(:link, action, arguments, block)
     end
 

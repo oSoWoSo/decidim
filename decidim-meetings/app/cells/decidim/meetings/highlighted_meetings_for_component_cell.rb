@@ -10,6 +10,7 @@ module Decidim
     class HighlightedMeetingsForComponentCell < Decidim::ViewModel
       include Decidim::ComponentPathHelper
       include Decidim::CardHelper
+      include Decidim::LayoutHelper
 
       def show
         render unless meetings_count.zero?
@@ -52,6 +53,10 @@ module Decidim
         hash.push(current_user.try(:id))
         hash << I18n.locale.to_s
         hash.join(Decidim.cache_key_separator)
+      end
+
+      def component_routes
+        Decidim::EngineRouter.main_proxy(model)
       end
     end
   end
