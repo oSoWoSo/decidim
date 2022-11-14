@@ -16,9 +16,6 @@ import addInputEmoji, { EmojiButton } from "src/decidim/input_emoji"
 import dialogMode from "src/decidim/dialog_mode"
 import FocusGuard from "src/decidim/focus_guard"
 import backToListLink from "src/decidim/back_to_list"
-import Accordions from "a11y-accordion-component";
-import Dropdowns from "a11y-dropdown-component";
-import Dialogs from "a11y-dialog-component";
 import markAsReadNotifications from "src/decidim/notifications"
 
 window.Decidim = window.Decidim || {};
@@ -99,6 +96,10 @@ $(() => {
 
   backToListLink(document.querySelectorAll(".js-back-to-list"));
 
+  markAsReadNotifications()
+
+  scrollToLastChild()
+
   Accordions.init();
   Dropdowns.init();
   document.querySelectorAll("[data-dialog]").forEach(
@@ -121,8 +122,4 @@ $(() => {
         closingSelector: `[data-drawer-close="${drawer}"]`
       })
   );
-
-  markAsReadNotifications()
-
-  scrollToLastChild()
 });

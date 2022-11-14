@@ -5,6 +5,7 @@ module Decidim
   class UploadModalCell < Decidim::ViewModel
     include Cell::ViewModel::Partial
     include ERB::Util
+    include Decidim::RedesignHelper
 
     alias form model
 
@@ -16,6 +17,15 @@ module Decidim
 
     private
 
+    # REDESIGN_PENDING: Remove once redesign is done. This cell is called from
+    # a form builder method and from there the context of controller is not
+    # available
+    def redesign_enabled?
+      return super if context.present? && context[:controller].present?
+
+      options[:redesigned]
+    end
+
     def button_id
       prefix = form.object_name.present? ? "#{form.object_name}_" : ""
 
@@ -23,9 +33,13 @@ module Decidim
     end
 
     def button_class
-      "button small hollow add-field add-file" if has_title?
+      if redesign_enabled?
+        options[:button_class] || ""
+      else
+        "button small hollow add-field add-file" if has_title?
 
-      "button small add-file"
+        "button small add-file"
+      end
     end
 
     def label
@@ -58,10 +72,6 @@ module Decidim
 
     def resource_name
       options[:resource_name]
-    end
-
-    def actions_wrapper_class
-      has_title? ? "actions-wrapper titled" : "actions-wrapper"
     end
 
     def attribute
@@ -164,7 +174,7 @@ module Decidim
       return Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true) if attachment.is_a? ActiveStorage::Blob
 
       if attachment.try(:attached?)
-        attachment_path = Rails.application.routes.url_helpers&.rails_blob_url(attachment.blob, only_path: true)
+        attachment_path = Rails.application.routes.url_helpers&.rails_blob_url(blob(attachment), only_path: true)
         return attachment_path if attachment_path.present?
       end
 
