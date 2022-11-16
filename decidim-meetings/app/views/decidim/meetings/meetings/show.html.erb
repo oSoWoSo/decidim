@@ -39,12 +39,8 @@ edit_link(
     <%= link_to caption, edit_meeting_meeting_close_path(meeting_id: meeting.id, id: meeting.id), class: "button hollow expanded button-sc button--icon follow-button" %>
   <% end %>
 
-  <%# REDESIGN_PENDING: deprecated %>
-  <%#= cell("decidim/date_range", { start: meeting.start_time, end: meeting.end_time }) %>
-
   <%= cell "decidim/meetings/join_meeting_button", meeting, show_remaining_slots: true %>
 
-  <%# REDESIGN_PENDING: perhaps all these "blocks" could be refactored, avoiding so much logic in the view %>
   <% if meeting.closed? && meeting.closing_visible? %>
     <% if meeting.has_contributions? %>
       <%= render layout: "decidim/meetings/layouts/aside_block", locals: { emoji: "add-box-line" } do %>
@@ -92,10 +88,6 @@ edit_link(
       <% end %>
     <% end %>
   <% end %>
-
-  <%# REDESIGN_PENDING: deprecated? %>
-  <%#= render partial: "calendar_modal", locals: { ics_url: calendar_meeting_url(meeting), google_url: google_calendar_event_url(meeting) } %>
-
 <% end %>
 
 <%= render layout: "layouts/decidim/shared/drawer" do %>
@@ -104,32 +96,7 @@ edit_link(
 
   <h2 class="h2 decorator"><%= present(meeting).title(links: true, html_escape: true ) %></h2>
 
-  <div class="meeting__calendar-container mt-8">
-    <%
-      is_same_month = meeting.start_time.month == meeting.end_time.month;
-      is_same_day = meeting.start_time.day == meeting.end_time.day;
-    %>
-    <div class="meeting__calendar meeting__calendar__lg">
-      <div class="meeting__calendar-month">
-        <span><%= l(meeting.start_time, format: !is_same_month ? "%b" : "%B") %></span>
-        <span class="meeting__calendar-separator"><%= "-" if !is_same_month %></span>
-        <span><%= l(meeting.end_time, format: "%b") if !is_same_month %></span>
-      </div>
-      <div class="meeting__calendar-day">
-        <span><%= l(meeting.start_time, format: "%d") %></span>
-        <span class="meeting__calendar-separator"><%= "-" if !is_same_day || !is_same_month %></span>
-        <span><%= l(meeting.end_time, format: "%d") if !is_same_day || !is_same_month %></span>
-      </div>
-      <div class="meeting__calendar-time">
-        <span><%= l(meeting.start_time, format: "%H:%m") %></span>
-        <span class="meeting__calendar-separator"><%= "-" %></span>
-        <span><%= l(meeting.end_time, format: "%H:%m") %></span>
-      </div>
-    </div>
-    <% if meeting.maps_enabled? && !meeting.online_meeting? %>
-      <%= render partial: "decidim/shared/static_map", locals: { geolocalizable: meeting } %>
-    <% end %>
-  </div>
+  <%= cell "decidim/meetings/dates_and_map", meeting %>
 
   <div class="meeting__author">
     <%= cell "decidim/author", author_presenter_for(meeting.normalized_author), from: meeting, context_actions: [:date], layout: :compact %>
@@ -175,11 +142,10 @@ edit_link(
   </div>
 
   <div class="mt-8">
-    <%# REDESIGN_PENDING: this value for the reference %>
-    <%= resource_reference(meeting) %>
-    <%= resource_version(meeting, versions_path: meeting_version_path(meeting, meeting.versions.count)) %>
-    <%# REDESIGN_PENDING: same cell as acountability, use the previous values %>
-    <%#= cell "decidim/accountability/result_metadata", result, template: :show_footer %>
+    <ul class="drawer-metadata__container" data-metadata-footer>
+      <%= content_tag :li, resource_reference(meeting), class: "drawer-metadata__item" %>
+      <%= content_tag :li, resource_version(meeting, versions_path: meeting_version_path(meeting, meeting.versions.count)), class: "drawer-metadata__item" %>
+    </ul>
   </div>
 
   <%= attachments_for meeting %>
@@ -188,7 +154,6 @@ edit_link(
 
   <%# REDESIGN_PENDING: deprecated, now it's always in the layout %>
   <%#= cell("decidim/flag_modal", meeting) %>
-
 </div>
 
 <% end %>
