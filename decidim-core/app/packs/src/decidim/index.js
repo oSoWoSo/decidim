@@ -17,7 +17,13 @@ import dialogMode from "src/decidim/dialog_mode"
 import FocusGuard from "src/decidim/focus_guard"
 import backToListLink from "src/decidim/back_to_list"
 import markAsReadNotifications from "src/decidim/notifications"
-import RemoteModal from "src/decidim/ajax_modals"
+
+// NOTE: new libraries required to give functionality to redesigned views
+import Accordions from "a11y-accordion-component";
+import Dropdowns from "a11y-dropdown-component";
+import Dialogs from "a11y-dialog-component";
+import RemoteModal from "./redesigned_ajax_modals"
+// end new libraries
 
 window.Decidim = window.Decidim || {};
 window.Decidim.config = new Configuration()
@@ -107,6 +113,7 @@ $(() => {
 
   scrollToLastChild()
 
+  // NOTE: new libraries required to give functionality to redesigned views
   Accordions.init();
   Dropdowns.init();
   document.querySelectorAll("[data-dialog]").forEach(
@@ -121,12 +128,6 @@ $(() => {
       })
     }
   );
-
-  document.querySelectorAll("[data-drawer]").forEach(
-    ({ dataset: { drawer } }) =>
-      new Dialogs(`[data-drawer="${drawer}"]`, {
-        openingSelector: `[data-drawer-open="${drawer}"]`,
-        closingSelector: `[data-drawer-close="${drawer}"]`
-      })
-  );
+  document.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
+  // end new libraries
 });
