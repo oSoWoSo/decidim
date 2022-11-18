@@ -55,14 +55,26 @@
   </section>
 
   <section class="content-block">
+    <%#= REDESIGN_PENDING: proposals markup not ready %>
     <%= render_hook(:participatory_space_highlighted_elements) %>
   </section>
 
   <% if related_processes.any? %>
     <section class="content-block">
-      <h2 class="h2 decorator"><%= t "related_processes", scope: "decidim.participatory_processes.show" %></h2>
-      <div class="collapsible-list row small-up-1 medium-up-2 card-grid">
-        <% related_processes.each do |related_process| %>
+      <div class="process__block-title">
+        <h2 class="h2 decorator"><%= t "related_processes", scope: "decidim.participatory_processes.show" %></h2>
+        <div class="label text-lg"><%= related_processes.length %></div>
+        <%#= REDESIGN_PENDING: add link to index %>
+        <%= link_to "#", class: "button button__sm button__text-secondary" do %>
+          <span><%= t("decidim.participatory_processes.pages.home.highlighted_processes.see_all_processes") %></span>
+          <%= icon "arrow-right-line" %>
+        <% end %>
+      </div>
+
+      <% related_processes2 = related_processes.to_a * 10 %>
+
+      <div class="process__block-grid">
+        <% related_processes2.each do |related_process| %>
           <%= card_for(related_process) %>
         <% end %>
         <div class="lead">
@@ -70,13 +82,23 @@
         </div>
         <%= decidim_sanitize_editor_admin translated_attribute(current_participatory_space.description) %>
       </div>
+
     </section>
   <% end %>
 
   <% if linked_assemblies.any? %>
     <section class="content-block">
-      <h2 class="h2 decorator"><%= t("participatory_process.show.related_assemblies", scope: "decidim") %></h2>
-      <div class="row small-up-1 medium-up-2 card-grid">
+      <div class="process__block-title">
+        <h2 class="h2 decorator"><%= t("participatory_process.show.related_assemblies", scope: "decidim") %></h2>
+        <div class="label text-lg"><%= linked_assemblies.length %></div>
+        <%#= REDESIGN_PENDING: add link to index %>
+        <%= link_to "#", class: "button button__sm button__text-secondary" do %>
+          <span><%= t("decidim.participatory_processes.pages.home.highlighted_processes.see_all_processes") %></span>
+          <%= icon "arrow-right-line" %>
+        <% end %>
+      </div>
+
+      <div class="process__block-grid">
         <% linked_assemblies.each do |linked_assembly| %>
           <%= card_for(linked_assembly) %>
         <% end %>
@@ -102,6 +124,41 @@
 <div class="row column">
   <div class="row">
     <div class="columns medium-7 mediumlarge-8">
+      <div class="section">
+        <h2 class="show-for-sr"><%= t(".title") %></h2>
+        <% if participatory_process_group.present? %>
+          <%= render partial: "participatory_process_group" %>
+        <% end %>
+        <div class="lead">
+          <%= decidim_sanitize_editor translated_attribute(current_participatory_space.short_description) %>
+        </div>
+        <%= decidim_sanitize_editor_admin translated_attribute(current_participatory_space.description) %>
+      </div>
+      <%= attachments_for current_participatory_space %>
+      <%= render_hook(:participatory_space_highlighted_elements) %>
+
+      <% if related_processes.any? %>
+        <div class="section row collapse related_processes">
+          <h4 class="section-heading"><%= t "related_processes", scope: "decidim.participatory_processes.show" %></h4>
+          <div class="collapsible-list row small-up-1 medium-up-2 card-grid">
+            <% related_processes.each do |related_process| %>
+              <%= card_for(related_process) %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if linked_assemblies.any? %>
+        <div class="section">
+          <h4 class="section-heading"><%= t("participatory_process.show.related_assemblies", scope: "decidim") %></h4>
+          <div class="row small-up-1 medium-up-2 card-grid">
+            <% linked_assemblies.each do |linked_assembly| %>
+              <%= card_for(linked_assembly) %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
     </div>
     <div class="section columns medium-5 mediumlarge-4 large-3">
       <div class="card extra">
