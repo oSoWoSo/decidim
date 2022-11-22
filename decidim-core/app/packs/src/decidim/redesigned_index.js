@@ -80,7 +80,6 @@ import RemoteModal from "./redesigned_ajax_modals"
 import selectActiveIdentity from "./redesigned_identity_selector_dialog"
 import setHeadingTag from "./redesigned_heading_tag"
 import addFloatingHelp from "./redesigned_floating_help"
-import setHeadingTag from "./redesigned_heading_tag"
 
 // bad practice: window namespace should avoid be populated as much as possible
 // rails-translations could be referrenced through a single Decidim.I18n object
