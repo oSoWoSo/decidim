@@ -182,6 +182,7 @@ const initializer = (element = document) => {
     return new Dialogs(`[data-dialog="${dialog}"]`, {
       openingSelector: `[data-dialog-open="${dialog}"]`,
       closingSelector: `[data-dialog-close="${dialog}"]`,
+      backdropSelector: `[data-dialog="${dialog}"]`,
       // optional parameters (whenever exists the id, it'll add the tagging)
       ...(Boolean(elem.querySelector(`#dialog-title-${dialog}`)) && {
         labelledby: `dialog-title-${dialog}`
