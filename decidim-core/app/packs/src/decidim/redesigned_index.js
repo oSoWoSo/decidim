@@ -70,7 +70,7 @@ import scrollToLastChild from "./scroll_to_last_child"
 import InputCharacterCounter, { createCharacterCounter } from "./redesigned_input_character_counter"
 import FormValidator from "./form_validator"
 import DataPicker from "./data_picker"
-import FormFilterComponent from "./form_filter"
+import FormFilterComponent from "./redesigned_form_filter"
 import addInputEmoji, { EmojiButton } from "./input_emoji"
 import dialogMode from "./dialog_mode"
 import FocusGuard from "./focus_guard"
@@ -80,6 +80,7 @@ import RemoteModal from "./redesigned_ajax_modals"
 import selectActiveIdentity from "./redesigned_identity_selector_dialog"
 import setHeadingTag from "./redesigned_heading_tag"
 import addFloatingHelp from "./redesigned_floating_help"
+import setHeadingTag from "./redesigned_heading_tag"
 
 // bad practice: window namespace should avoid be populated as much as possible
 // rails-translations could be referrenced through a single Decidim.I18n object
@@ -90,7 +91,9 @@ window.Decidim = window.Decidim || {
   FormValidator,
   DataPicker,
   addInputEmoji,
-  EmojiButton
+  EmojiButton,
+  Accordions,
+  Dropdowns
 };
 
 window.morphdom = morphdom
@@ -169,6 +172,9 @@ const initializer = (element = document) => {
   markAsReadNotifications(element)
 
   scrollToLastChild(element)
+
+  window.Decidim.Accordions.init();
+  window.Decidim.Dropdowns.init();
 
   // https://github.com/jonathanlevaillant/a11y-accordion-component
   Accordions.init();

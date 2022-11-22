@@ -1,6 +1,5 @@
-// Images
-require.context("../images", true)
-
 // CSS
 import "stylesheets/comments.scss"
 
+// Javacript
+import "src/decidim/comments/comments"
