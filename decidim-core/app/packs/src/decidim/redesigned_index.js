@@ -92,7 +92,8 @@ window.Decidim = window.Decidim || {
   addInputEmoji,
   EmojiButton,
   Accordions,
-  Dropdowns
+  Dropdowns,
+  Dialogs
 };
 
 window.morphdom = morphdom
