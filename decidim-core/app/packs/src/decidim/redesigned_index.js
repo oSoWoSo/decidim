@@ -172,9 +172,6 @@ const initializer = (element = document) => {
 
   scrollToLastChild(element)
 
-  window.Decidim.Accordions.init();
-  window.Decidim.Dropdowns.init();
-
   // https://github.com/jonathanlevaillant/a11y-accordion-component
   Accordions.init();
   // https://github.com/jonathanlevaillant/a11y-dropdown-component
@@ -216,9 +213,6 @@ const initializer = (element = document) => {
 
   // Add event listeners to identity modal
   element.querySelectorAll("[data-user-identity]").forEach((elem) => selectActiveIdentity(elem))
-
-  // Initialize available remote modals (ajax-fetched contents)
-  element.querySelectorAll("[data-dialog-remote-url]").forEach((elem) => new RemoteModal(elem))
 
   // Initialize the floating help blocks for the participatory processes
   element.querySelectorAll("[data-floating-help]").forEach((elem) => addFloatingHelp(elem))
