@@ -90,7 +90,9 @@ window.Decidim = window.Decidim || {
   FormValidator,
   DataPicker,
   addInputEmoji,
-  EmojiButton
+  EmojiButton,
+  Accordions,
+  Dropdowns
 };
 
 window.morphdom = morphdom
@@ -169,6 +171,9 @@ const initializer = (element = document) => {
   markAsReadNotifications(element)
 
   scrollToLastChild(element)
+
+  window.Decidim.Accordions.init();
+  window.Decidim.Dropdowns.init();
 
   // https://github.com/jonathanlevaillant/a11y-accordion-component
   Accordions.init();
