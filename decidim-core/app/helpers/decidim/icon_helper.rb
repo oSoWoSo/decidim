@@ -31,6 +31,11 @@ module Decidim
       "official" => "star-line",
       "participants" => "open-arm-line",
       "user_groups" => "team-line",
+      "like" => "heart-add-line",
+      "dislike" => "dislike-line",
+      "follow" => "notification-3-line",
+      "unfollow" => "notification-3-fill",
+      "share" => "share-line",
       "other" => "question-line"
     }.freeze
 
