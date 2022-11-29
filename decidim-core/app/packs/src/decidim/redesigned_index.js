@@ -209,7 +209,6 @@ const initializer = (element = document) => {
     });
   });
 
-
   // Intialize dialog modals
   document.querySelectorAll("[data-dialog]").forEach(
     ({ dataset: { dialog } }) =>
@@ -219,8 +218,7 @@ const initializer = (element = document) => {
         labelledby: `dialog-title-${dialog}`,
         describedby: `dialog-desc-${dialog}`
       })
-    });
-  });
+  );
 
   // Initialize drawer components
   document.
