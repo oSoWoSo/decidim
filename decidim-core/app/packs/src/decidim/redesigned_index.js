@@ -205,12 +205,25 @@ const initializer = (element = document) => {
         labelledby: `dialog-title-${dialog}`
       }),
       ...(Boolean(elem.querySelector(`#dialog-desc-${dialog}`)) && {
+      })
+    });
+  });
+
+
+  // Intialize dialog modals
+  document.querySelectorAll("[data-dialog]").forEach(
+    ({ dataset: { dialog } }) =>
+      new Dialogs(`[data-dialog="${dialog}"]`, {
+        openingSelector: `[data-dialog-open="${dialog}"]`,
+        closingSelector: `[data-dialog-close="${dialog}"]`,
+        labelledby: `dialog-title-${dialog}`,
         describedby: `dialog-desc-${dialog}`
       })
     });
   });
 
-  element.
+  // Initialize drawer components
+  document.
     querySelectorAll("[data-drawer]").
     forEach(({ dataset: { drawer } }) =>
       new Dialogs(`[data-drawer="${drawer}"]`, {
