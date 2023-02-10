@@ -1,5 +1,5 @@
 <% if current_user && !current_user.remember_created_at %>
-  <% timeout_time_seconds = Decidim.config.expire_session_after.to_i %>
+  <% timeout_time_seconds = 180 #Decidim.config.expire_session_after.to_i %>
   <% prevent_timeout_for = try(:prevent_timeout_seconds) || 0 %>
 
   <%= decidim_modal id: "timeoutModal", data: {
