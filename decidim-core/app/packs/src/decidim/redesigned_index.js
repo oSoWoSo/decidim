@@ -48,7 +48,7 @@ import "./delayed"
 import "./vizzs"
 import "./responsive_horizontal_tabs"
 import "./security/selfxss_warning"
-import "./session_timeouter"
+import "./redesigned_session_timeouter"
 import "./confirm"
 import "./results_listing"
 // import "./represent_user_group" -- deprecated
