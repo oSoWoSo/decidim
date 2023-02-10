@@ -23,6 +23,30 @@ module Decidim
         [type, category_item, duration, comments_count_item, official, withdrawn_item]
       end
 
+      def meeting_items_for_map
+        [dates, type, official].compact_blank.map do |item|
+          {
+            text: item[:text],
+            icon: icon(item[:icon]).html_safe
+          }
+        end
+      end
+
+      def dates
+        text = if start_time.year != end_time.year
+                 "#{l(start_time.to_date, format: :decidim_short_with_month_name_short)} - #{l(end_time.to_date, format: :decidim_short_with_month_name_short)}"
+               elsif start_time.month != end_time.month || start_time.day != end_time.day
+                 "#{l(start_time.to_date, format: :decidim_with_month_name_short)} - #{l(end_time.to_date, format: :decidim_with_month_name_short)}"
+               else
+                 "#{l(start_time, format: :time_of_day)} - #{l(end_time, format: :time_of_day)}"
+               end
+
+        {
+          text:,
+          icon: "timer-2-line"
+        }
+      end
+
       def type
         {
           text: t(type_of_meeting, scope: "decidim.meetings.meetings.filters.type_values"),
