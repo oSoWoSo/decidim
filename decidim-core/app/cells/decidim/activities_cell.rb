@@ -8,14 +8,6 @@ module Decidim
     include Decidim::IconHelper
     include Decidim::Core::Engine.routes.url_helpers
 
-    # Since we're rendering each activity separatedly we need to trigger
-    # BatchLoader in order to accumulate all the ids to be found later.
-    def show
-      return if activities.blank?
-
-      render
-    end
-
     def activity_cell_for(activity)
       options = {
         show_author: (context[:user] != activity.user)

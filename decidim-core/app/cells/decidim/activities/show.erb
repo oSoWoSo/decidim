@@ -1,3 +1,9 @@
-<% activities.each do |activity| %>
-  <%= activity_cell_for(activity) %>
+<% if activities.blank? %>
+  <div class="callout warning">
+    <%= t "decidim.last_activities.activities.no_activities_warning" %>
+  </div>
+<% else %>
+  <% activities.each do |activity| %>
+    <%= activity_cell_for(activity) %>
+  <% end %>
 <% end %>

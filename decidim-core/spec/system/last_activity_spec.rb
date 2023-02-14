@@ -130,6 +130,10 @@ describe "Last activity", type: :system do
         it "doesn't show the activities" do
           expect(page).to have_css("[data-activity]", count: 0)
         end
+
+        it "shows the no activities warning" do
+          expect(page).to have_content("No activity")
+        end
       end
     end
   end
