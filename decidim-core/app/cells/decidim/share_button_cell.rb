@@ -5,7 +5,7 @@ module Decidim
     private
 
     def button_classes
-      "button button__sm button__text-secondary"
+      "button button__sm button__text button__text-secondary"
     end
 
     def text
