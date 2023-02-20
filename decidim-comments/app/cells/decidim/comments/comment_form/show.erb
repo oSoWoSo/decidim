@@ -2,23 +2,32 @@
   <%= form.hidden_field :commentable_gid, id: nil %>
   <%= form.hidden_field :alignment, id: nil, class: "alignment-input" %>
   <%= comment_as_for(form) %>
-  <div class="field">
-    <label class="show-for-sr" for="<%= add_comment_id %>">
+  <div class="form__wrapper gap-2">
+    <label class="text-gray-2" for="<%= add_comment_id %>">
       <%= t("decidim.components.add_comment_form.form.body.label") %>
     </label>
-    <div class="hashtags__container">
-      <%= form.text_area(
-        :body,
-        id: add_comment_id,
-        rows: 4,
-        maxlength: comments_max_length,
-        required: true,
-        placeholder: t("decidim.components.add_comment_form.form.body.placeholder"),
-        label: false,
-        data: { remaining_characters: "##{add_comment_id}-remaining-characters", input_emoji: true }
-      ) %>
+    <%= form.text_area(
+      :body,
+      id: add_comment_id,
+      class: "w-full rounded border min-h-[160px] border-text-gray-2",
+      maxlength: comments_max_length,
+      required: true,
+      placeholder: t("decidim.components.add_comment_form.form.body.placeholder"),
+      label: false,
+      data: { remaining_characters: "##{add_comment_id}-remaining-characters", input_emoji: true }
+    ) %>
+    <span id="<%= add_comment_id %>-remaining-characters" class="remaining-character-count show-erb-comment"></span>
+    <div class="w-full text-right">
+      <button type="submit" class="button button__sm button__secondary" disabled="disabled">
+        <span>
+        <% if reply? %>
+          <%= t("decidim.components.add_comment_form.form.submit_reply") %>
+        <% else %>
+          <%= t("decidim.components.add_comment_form.form.submit_root_comment") %>
+        <% end %>
+        </span>
+        <%= icon "chat-1-line" %>
+      </button>
     </div>
-    <button type="submit" class="button button--sc" disabled="disabled"><%= t("decidim.components.add_comment_form.form.submit") %></button>
-    <span id="<%= add_comment_id %>-remaining-characters" class="remaining-character-count"></span>
   </div>
 <% end %>

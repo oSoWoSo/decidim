@@ -172,9 +172,35 @@ const initializer = (element = document) => {
   scrollToLastChild()
 
   // https://github.com/jonathanlevaillant/a11y-accordion-component
-  Accordions.init();
+  element.querySelectorAll('[data-component="accordion"]').forEach((component) => {
+    const accordionOptions = {};
+    accordionOptions.isMultiSelectable = component.dataset.multiselectable !== "false";
+    accordionOptions.isCollapsible = component.dataset.collapsible !== "false";
+
+    if (!component.id) {
+      // when component has no id, we enforce to have it one
+      component.id = `accordion-${Math.random().toString(36).substring(7)}`
+    }
+
+    Accordions.render(component.id, accordionOptions);
+  });
+
   // https://github.com/jonathanlevaillant/a11y-dropdown-component
-  Dropdowns.init();
+  element.querySelectorAll('[data-component="dropdown"]').forEach((component) => {
+    const dropdownOptions = {};
+    dropdownOptions.dropdown = component.dataset.target;
+    dropdownOptions.hover = component.dataset.hover === "true";
+    dropdownOptions.isOpen = component.dataset.open === "true";
+    dropdownOptions.autoClose = component.dataset.autoClose === "true";
+
+    if (!component.id) {
+      // when component has no id, we enforce to have it one
+      component.id = `dropdown-${Math.random().toString(36).substring(7)}`
+    }
+
+    Dropdowns.render(component.id, dropdownOptions);
+  });
+
   // https://github.com/jonathanlevaillant/a11y-dialog-component
   element.querySelectorAll("[data-dialog]").forEach((elem) => {
     const {
@@ -248,3 +274,16 @@ $(() => initializer());
 
 // Run initializer action over the new DOM elements
 document.addEventListener("remote-modal:loaded", ({ detail }) => initializer(detail));
+
+// Run initializer action over the new DOM elements (for example after comments polling)
+document.addEventListener("ajax:success", (event) => {
+  const commentsIds = event.detail.commentsIds;
+  if (commentsIds) {
+    commentsIds.forEach((commentId) => {
+      const commentsContainer = document.getElementById(`comment_${commentId}`);
+      if (commentsContainer) {
+        initializer(commentsContainer)
+      }
+    });
+  }
+});

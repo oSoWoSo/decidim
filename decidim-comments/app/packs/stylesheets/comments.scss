@@ -1,0 +1,288 @@
+.comments{
+  &__container{
+    @apply my-12;
+  }
+
+  .add-comment .remaining-character-count{
+    @apply inline-block align-middle text-sm;
+  }
+
+  &__header{
+    @apply flex items-center gap-x-2 mb-4;
+  }
+
+  .tribute-container{
+    @apply w-full relative;
+
+    #results{
+      @apply absolute max-h-[225px] top-full left-0 right-0 p-0 my-2 rounded z-50 overflow-y-scroll bg-white;
+
+      border: 1px solid rgba(33, 33, 33, .1);
+
+      li{
+        @apply flex items-center gap-2 cursor-pointer px-4 py-2;
+      }
+
+      li:hover{
+        @apply cursor-pointer;
+
+        background-color: rgba(123, 123, 123, .1);
+      }
+
+      img{
+        @apply rounded-full w-6 h-6 object-cover;
+      }
+
+      span,
+      strong{
+        @apply font-semibold text-sm text-secondary;
+      }
+
+      small{
+        @apply font-normal text-gray-2 text-xs;
+      }
+
+      svg{
+        @apply w-4 h-4 text-primary fill-current;
+      }
+
+      .is-group{
+        @apply flex items-center gap-1;
+      }
+    }
+  }
+}
+
+.comment{
+  @apply rounded-lg border-2 border-background p-4 pl-6;
+
+  &__header{
+    @apply flex items-center gap-x-2 mb-2 -ml-[34px] relative z-10;
+  }
+
+  &__footer-grid{
+    @apply grid grid-cols-2 items-center mt-2;
+  }
+
+  &__reply{
+    @apply text-secondary mt-2;
+  }
+
+  &-reply{
+    @apply rounded-lg border-2 border-background bg-background-2 p-4 pl-6 relative;
+  }
+
+  &-reply:empty{
+    @apply hidden;
+  }
+
+  &-reply::after{
+    @apply bg-gray inline-block absolute top-8 h-4/5 w-px z-0;
+
+    content: "";
+  }
+
+  &-reply .comment,
+  &-reply .comment-reply{
+    @apply border-0;
+  }
+
+  &-thread{
+    @apply mb-8;
+
+    .button[aria-expanded="false"]{
+      svg:first-of-type{
+        @apply block;
+      }
+
+      svg:last-of-type{
+        @apply hidden;
+      }
+    }
+
+    .button[aria-expanded="true"]{
+      svg:first-of-type{
+        @apply hidden;
+      }
+
+      svg:last-of-type{
+        @apply block;
+      }
+    }
+  }
+
+  &__as{
+    @apply my-4;
+  }
+
+  .add-comment{
+    @apply w-full;
+  }
+
+  .comment__votes{
+    @apply justify-self-end;
+
+    .comment__votes--up{
+      @apply mr-2;
+    }
+
+    .button_to:first-child,
+    button:first-child,
+    button:nth-child(2),
+    .button_to:nth-child(2){
+      svg:first-child{
+        @apply block;
+      }
+
+      svg:nth-child(2){
+        @apply hidden;
+      }
+
+      .is-vote-selected{
+        svg:first-child{
+          @apply hidden;
+        }
+
+        svg:nth-child(2){
+          @apply block;
+        }
+      }
+
+      .is-vote-notselected{
+        svg:first-child{
+          @apply block;
+        }
+
+        svg:nth-child(2){
+          @apply hidden;
+        }
+      }
+    }
+
+    .button_to:nth-child(2){
+      svg:first-child{
+        @apply block;
+      }
+
+      svg:nth-child(2){
+        @apply hidden;
+      }
+
+      .is-vote-selected{
+        svg:first-child{
+          @apply hidden;
+        }
+
+        svg:nth-child(2){
+          @apply block;
+        }
+      }
+
+      .is-vote-notselected{
+        svg:first-child{
+          @apply block;
+        }
+
+        svg:nth-child(2){
+          @apply hidden;
+        }
+      }
+    }
+
+    .comment__votes--count{
+      @apply text-gray-2 text-sm;
+    }
+
+    .button_to{
+      @apply inline-block;
+    }
+  }
+
+  &-order-by{
+    @apply ml-auto grid grid-cols-4 mt-4 md:mt-0;
+  }
+
+  &__actions{
+    .button[aria-expanded="false"]{
+      svg:first-of-type{
+        @apply block;
+      }
+
+      svg:last-of-type{
+        @apply hidden;
+      }
+
+      span:first-of-type{
+        @apply block;
+      }
+
+      span:last-of-type{
+        @apply hidden;
+      }
+    }
+
+    .button[aria-expanded="true"]{
+      svg:first-of-type{
+        @apply hidden;
+      }
+
+      svg:last-of-type{
+        @apply block;
+      }
+
+      span:first-of-type{
+        @apply hidden;
+      }
+
+      span:last-of-type{
+        @apply block;
+      }
+    }
+  }
+
+  &__content .user-mention{
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    color: rgb(21 90 191 / var(--tw-text-opacity));
+    color: rgb(var(--secondary-rgb) / var(--tw-text-opacity));
+
+    --tw-text-opacity: 1;
+  }
+
+  &__opinion-container{
+    @apply flex gap-x-6;
+
+    button.is-active{
+      svg:first-of-type{
+        @apply hidden;
+      }
+
+      svg:last-of-type{
+        @apply block;
+      }
+
+      span{
+        @apply font-bold;
+      }
+    }
+
+    button{
+      svg:first-of-type{
+        @apply block;
+      }
+
+      svg:last-of-type{
+        @apply hidden;
+      }
+    }
+  }
+
+  &__deleted{
+    @apply font-bold;
+  }
+}
+
+a[href*="/users/sign_"]{
+  @apply text-secondary font-medium underline;
+}

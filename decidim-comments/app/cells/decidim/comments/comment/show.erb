@@ -1,51 +1,42 @@
-<%= content_tag :div, id: "comment_#{model.id}", class: comment_classes, data: { comment_id: model.id } do %>
+<%= content_tag :div, id: "comment_#{model.id}", class: "comment", data: { comment_id: model.id } do %>
   <% if model.hidden? %>
     <%= render :moderation_data %>
   <% elsif model.deleted? %>
     <%= render :deletion_data %>
   <% else %>
     <div class="comment__header">
-      <div class="author-data">
-        <div class="author-data__main">
-          <%= render :author %>
-          <span>
-            <%= time_tag created_at, l(created_at, format: :decidim_short) %>
-          </span>
-          <% if edited? %>
-            <div class="author-data__extra">
-              <span class="comment__edited">
-                <%= t("decidim.components.comment.edited") %>
-              </span>
-            </div>
-          <% end %>
-        </div>
-      </div>
+      <span class="font-bold">
+        <%== cell("decidim/redesigned_author", author_presenter).profile %>
+      </span>
+      <span class="text-gray-2 text-sm">
+        <%= time_tag created_at, time_ago_in_words(created_at) %>
+      </span>
+      <% if edited? %>
+        <span>
+          <%= t("decidim.components.comment.edited") %>
+        </span>
+      <% end %>
       <%= render :utilities %>
     </div>
     <div class="comment__content">
       <%= alignment_badge %>
       <%= comment_body %>
     </div>
-    <div class="comment__footer">
-      <%= render :actions %>
-      <%= votes %>
+    <div class="comment__footer" data-component="accordion" id="accordion-<%= model.id %>">
+      <div class="comment__footer-grid">
+        <%= render :actions %>
+        <%= votes %>
+      </div>
+      <% if can_reply? %>
+        <div id="panel-<%= reply_id %>" class="add-comment">
+          <%== cell("decidim/comments/comment_form", model, root_depth: root_depth, order: order) %>
+        </div>
+      <% end %>
     </div>
   <% end %>
-  <div id="comment-<%= model.id %>-replies">
+  <div id="comment-<%= model.id %>-replies" class="<%= "comment-reply" if has_replies_in_children? %>">
     <% if has_replies_in_children? %>
-      <% replies.each do |reply| %>
-        <%= cell("decidim/comments/comment", reply, root_depth: root_depth, order: order, reloaded: reloaded?) %>
-      <% end %>
+      <%= render :replies %>
     <% end %>
   </div>
-  <% if can_reply? %>
-    <div class="comment__additionalreply<%= " hide" unless commentable? %>">
-      <button class="comment__reply muted-link" aria-controls="<%= reply_id %>" data-toggle="<%= reply_id %>">
-        <%= icon "pencil", class: "icon--small", role: "img", "aria-hidden": true %>&nbsp;<%= t("decidim.components.comment.reply") %>
-      </button>
-    </div>
-    <div class="add-comment hide" id="<%= reply_id %>" data-toggler=".hide">
-      <%== cell("decidim/comments/comment_form", model, root_depth: root_depth, order: order) %>
-    </div>
-  <% end %>
 <% end %>

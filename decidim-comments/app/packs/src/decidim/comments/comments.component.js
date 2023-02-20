@@ -1,7 +1,6 @@
 /* eslint id-length: ["error", { "exceptions": ["$"] }] */
 /* eslint max-lines: ["error", {"max": 350, "skipBlankLines": true}] */
 
-
 /**
  * A plain Javascript component that handles the comments.
  *
@@ -12,9 +11,7 @@
 // This is necessary for testing purposes
 const $ = window.$;
 
-import Rails from "@rails/ujs";
-
-import { createCharacterCounter } from "src/decidim/input_character_counter"
+import { createCharacterCounter } from "src/decidim/redesigned_input_character_counter"
 import ExternalLink from "src/decidim/redesigned_external_link"
 import updateExternalDomainLinks from "src/decidim/external_domain_warning"
 import changeReportFormBehavior from "src/decidim/change_report_form_behavior"
@@ -49,8 +46,6 @@ export default class CommentsComponent {
           $(".add-comment textarea", this.$element).prop("disabled", false);
         });
       }
-
-      $(".order-by__dropdown .is-submenu-item a", this.$element).on("click.decidim-comments", () => this._onInitOrder());
     }
   }
 
@@ -66,7 +61,6 @@ export default class CommentsComponent {
 
       $(".add-comment .opinion-toggle .button", this.$element).off("click.decidim-comments");
       $(".add-comment textarea", this.$element).off("input.decidim-comments");
-      $(".order-by__dropdown .is-submenu-item a", this.$element).off("click.decidim-comments");
       $(".add-comment form", this.$element).off("submit.decidim-comments");
       $(".add-comment textarea", this.$element).each((_i, el) => el.removeEventListener("emoji.added", this._onTextInput));
     }
@@ -103,7 +97,7 @@ export default class CommentsComponent {
     const $comment = $(replyHtml);
     const $replies = $(`#comment-${commentId}-replies`);
     this._addComment($replies, $comment);
-    $replies.siblings(".comment__additionalreply").removeClass("hide");
+    $replies.addClass("comment-reply");
     this._finalizeCommentCreation($parent, fromCurrentUser);
   }
 
@@ -169,7 +163,7 @@ export default class CommentsComponent {
     $target.append($container);
     $container.foundation();
     this._initializeComments($container);
-    createCharacterCounter($(".add-comment textarea", $container));
+    $(".add-comment textarea", $container).each((_i, el) => createCharacterCounter($(el)));
     $container.find('a[target="_blank"]').each((_i, elem) => new ExternalLink(elem));
     updateExternalDomainLinks($container)
   }
@@ -185,16 +179,18 @@ export default class CommentsComponent {
    */
   _finalizeCommentCreation($parent, fromCurrentUser) {
     if (fromCurrentUser) {
-      const $add = $("> .add-comment", $parent);
-      const $text = $("textarea", $add);
-      const characterCounter = $text.data("remaining-characters-counter");
-      $text.val("");
-      if (characterCounter) {
-        characterCounter.updateStatus();
-      }
-      if (!$add.parent().is(".comments")) {
-        $add.addClass("hide");
-      }
+      const $add = $(".add-comment", $parent);
+      $("textarea", $add).each((_i, text) => {
+        const $text = $(text);
+        // Reset textarea content
+        $text.val("")
+        // Update characterCounter component
+        const characterCounter = $text.data("remaining-characters-counter");
+        if (characterCounter) {
+          characterCounter.handleInput();
+          characterCounter.updateStatus();
+        }
+      })
     }
 
     // Restart the polling
@@ -230,7 +226,7 @@ export default class CommentsComponent {
         "commentable_gid": this.commentableGid,
         "root_depth": this.rootDepth,
         "order": this.order,
-        "after": this.lastCommentId,
+        // From here, the rest of properties are optional
         ...(this.toggleTranslations && { "toggle_translations": this.toggleTranslations }),
         ...(this.lastCommentId && { "after": this.lastCommentId })
       }),
@@ -260,9 +256,9 @@ export default class CommentsComponent {
    * @returns {Void} - Returns nothing
    */
   _setLoading() {
-    const $container = $("> .comments-container", this.$element);
-    $("> .comments", $container).addClass("hide");
-    $("> .loading-comments", $container).removeClass("hide");
+    const $container = $("> .comments__container", this.$element);
+    $("> .comments", $container).addClass("hidden");
+    $("> .loading-comments", $container).removeClass("hidden");
   }
 
   /**

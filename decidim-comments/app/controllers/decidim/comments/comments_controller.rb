@@ -13,7 +13,8 @@ module Decidim
       before_action :set_commentable, except: [:destroy, :update]
       before_action :ensure_commentable!, except: [:destroy, :update]
 
-      helper_method :root_depth, :commentable, :order, :reply?, :reload?
+      helper_method :root_depth, :commentable, :order, :reply?, :reload?,
+                    :first_load?
 
       def index
         enforce_permission_to :read, :comment, commentable: commentable
@@ -47,6 +48,7 @@ module Decidim
 
       def update
         set_comment
+        set_commentable
         enforce_permission_to :update, :comment, comment: comment
 
         form = Decidim::Comments::CommentForm.from_params(
@@ -129,7 +131,11 @@ module Decidim
       attr_reader :commentable, :comment
 
       def set_commentable
-        @commentable = GlobalID::Locator.locate_signed(commentable_gid)
+        @commentable ||= if commentable_gid
+                           GlobalID::Locator.locate_signed(commentable_gid)
+                         elsif comment
+                           comment.root_commentable
+                         end
       end
 
       def set_comment
@@ -173,6 +179,10 @@ module Decidim
 
       def root_depth
         params.fetch(:root_depth, 0).to_i
+      end
+
+      def first_load?
+        !params.has_key?(:after)
       end
 
       def commentable_path
