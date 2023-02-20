@@ -20,7 +20,7 @@ module Decidim
       end
 
       def meetings_count
-        @meetings_count ||= meetings.count
+        @meetings_count ||= meetings.size
       end
 
       private
@@ -59,6 +59,10 @@ module Decidim
 
       def show_calendar?
         @show_calendar ||= show_upcoming_meetings? && collection.minimum(:start_time).before?(2.months.from_now.beginning_of_month)
+      end
+
+      def calendar_months
+        [Date.current, Date.current.next_month]
       end
 
       def past_meetings

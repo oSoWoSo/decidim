@@ -9,11 +9,11 @@ module Decidim
       alias processes model
 
       def total_count
-        @total_count ||= options[:total_count] || processes.count
+        @total_count ||= options[:total_count] || processes.size
       end
 
       def show_all_path
-        @show_all_path ||= options[:show_all_path].presence
+        @show_all_path ||= options[:show_all_path]
       end
     end
   end
